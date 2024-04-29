@@ -1,4 +1,10 @@
-<div>
-  <h1 class="font-bold text-4xl">ChatRooms#create</h1>
-  <p>Find me in app/views/chat_rooms/create.html.erb</p>
-</div>
+<%= turbo_frame_tag "new_room_create" do %>
+  <%= link_to "Back", chat_rooms_path, class: "bg-gray-300 text-black py-2 px-4 rounded-lg" %>
+  <%= form_with(model: @chat_room, class:"flex flex-col gap-4 justify-center mt-2") do |form| %>
+    <%= form.label :name, "Name of the room" %>
+    <%= form.text_field :name, class: "" %>
+    <%= form.label :name, "Description" %>
+    <%= form.text_field :description, class: "" %>
+    <%= form.submit "Create", class: "bg-orange-300 text-black py-2 px-4 rounded-lg mt-4" %>
+  <%end%>
+<% end %>
