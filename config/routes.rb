@@ -8,6 +8,4 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "home#index"
-  resources :chat_rooms, only: [:index, :new, :create]
-  resources :messages, only: [:new, :create]
 end

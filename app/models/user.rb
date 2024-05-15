@@ -1,7 +1,4 @@
 class User < ApplicationRecord
-  has_many :participants
-  has_many :chat_rooms, through: :participants
-  has_many :messages
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
