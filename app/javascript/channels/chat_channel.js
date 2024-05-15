@@ -13,6 +13,12 @@ consumer.subscriptions.create("ChatChannel", {
 
   received(data) {
     // Called when there's incoming data on the websocket for this channel
-    console.log(data);
+    const chatMessages = document.getElementById("chats");
+
+    const template = document.createElement("template");
+    template.innerHTML = data.html;
+
+    const chatElement = template.content.firstChild;
+    chatMessages.insertAdjacentElement("afterbegin", chatElement);
   },
 });
