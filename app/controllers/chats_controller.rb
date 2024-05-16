@@ -4,7 +4,7 @@ class ChatsController < ApplicationController
 
   # GET /chats or /chats.json
   def index
-    @chats = Chat.all
+    @chats = Chat.all.order(id: :desc)
   end
 
   # GET /chats/1 or /chats/1.json
@@ -26,9 +26,11 @@ class ChatsController < ApplicationController
 
     respond_to do |format|
       if @chat.save
-        format.turbo_stream { render turbo_stream: turbo_stream.prepend("chats", partial: "chat", locals: { chat: @chat }) }
+        format.turbo_stream { render turbo_stream:
+            turbo_stream.prepend("chats", partial: "chat", locals: { chat: @chat }) }
         format.html { redirect_to chat_url(@chat), notice: "Chat was successfully created." }
-        ActionCable.server.broadcast("chat_channel", { html: render_to_string(partial: "chat", locals: { chat: @chat }) })
+        ActionCable.server.broadcast("chat_channel",
+            { html: render_to_string(partial: "chat", locals: { chat: @chat }), type: "create" })
       else
         format.html { render :new, status: :unprocessable_entity }
       end
@@ -39,7 +41,9 @@ class ChatsController < ApplicationController
   def update
     respond_to do |format|
       if @chat.update(chat_params)
-        format.html { redirect_to chat_url(@chat), notice: "Chat was successfully updated." }
+        format.html { redirect_to chats_path, notice: "Chat was successfully updated." }
+        ActionCable.server.broadcast("chat_channel",
+            { html: render_to_string(partial: "chat", locals: { chat: @chat }), type: "update" })
       else
         format.html { render :edit, status: :unprocessable_entity }
       end
@@ -51,6 +55,9 @@ class ChatsController < ApplicationController
     @chat.destroy!
 
     respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.remove(@chat) }
+      ActionCable.server.broadcast("chat_channel",
+          { html: render_to_string(partial: "chat", locals: { chat: @chat }), type: "delete" })
       format.html { redirect_to chats_url, notice: "Chat was successfully destroyed." }
     end
   end

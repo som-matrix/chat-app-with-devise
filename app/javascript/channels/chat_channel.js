@@ -14,11 +14,17 @@ consumer.subscriptions.create("ChatChannel", {
   received(data) {
     // Called when there's incoming data on the websocket for this channel
     const chatMessages = document.getElementById("chats");
-
     const template = document.createElement("template");
     template.innerHTML = data.html;
-
     const chatElement = template.content.firstChild;
-    chatMessages.insertAdjacentElement("afterbegin", chatElement);
+    const chatId = chatElement.id;
+
+    if (data.type === "create") {
+      chatMessages.insertAdjacentElement("afterbegin", chatElement);
+    } else if (data.type === "update") {
+      chatMessages.querySelector(`#${chatId}`).replaceWith(chatElement);
+    } else if (data.type === "delete") {
+      chatMessages.querySelector(`#${chatId}`).remove();
+    }
   },
 });

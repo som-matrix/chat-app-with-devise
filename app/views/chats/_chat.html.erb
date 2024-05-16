@@ -1,11 +1,13 @@
 <div id="<%= dom_id chat %>">
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Message:</strong>
-    <%= chat.message %>
-  </p>
-  <% if action_name != "show" %>
-    <%= link_to "Show this chat", chat, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to "Edit this chat", edit_chat_path(chat), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
+  <%= turbo_frame_tag dom_id(chat) do %>
+    <p class="my-5">
+      <strong class="block font-medium mb-1">Message:</strong>
+      <%= chat.message %>
+    </p>
+    <%= link_to "Edit", edit_chat_path(chat), class: "rounded-lg py-3 ml-2 px-5 bg-indigo-300 inline-block font-medium" %>
+    <div class="inline-block ml-2">
+      <%= button_to "Delete", chat_path(chat), method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-red-400 font-medium" %>
+    </div>
     <hr class="mt-6">
-  <% end %>
+  <%end%>
 </div>
